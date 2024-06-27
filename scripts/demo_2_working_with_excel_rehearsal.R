@@ -4,6 +4,7 @@
 
 library(tidyverse)
 library(readxl)
+library(here)
 
 # Load packages ---------------------------------------------------------------------
 
@@ -27,6 +28,8 @@ results_joined <- sample_results |>
   left_join(sample_referrers, by = "i_gene_s_no")
 
 # Filter data -----------------------------------------------------------------------
+
+# grep: global regular expression print
 
 results_filtered <- results_joined |> 
   # Use ==
