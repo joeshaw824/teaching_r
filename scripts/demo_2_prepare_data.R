@@ -44,7 +44,7 @@ samples_to_get <- recent_samples_filter$labno
 
 sample_info <- sample_tbl |> 
   filter(labno %in% samples_to_get) |> 
-  select(labno, nhsno, concentration, consultant_address) |>
+  select(labno, i_gene_s_no, concentration, consultant_address) |>
   collect()
 
 # Table 1
@@ -54,15 +54,15 @@ sample_results <- recent_samples_filter |>
 
 # Table 2
 sample_dna_concs <- sample_info |> 
-  select(labno, nhsno, concentration) |> 
+  select(labno, i_gene_s_no, concentration) |> 
   rename(lab_number = labno) |> 
-  filter(!duplicated(nhsno) & !is.na(nhsno)) |> 
+  filter(!duplicated(i_gene_s_no) & !is.na(i_gene_s_no)) |> 
   mutate(concentration = as.numeric(concentration))
 
 # Table 3
 sample_referrer <- sample_info |> 
-  select(nhsno, consultant_address) |> 
-  filter(!duplicated(nhsno) & !is.na(nhsno)) |> 
+  select(i_gene_s_no, consultant_address) |> 
+  filter(!duplicated(i_gene_s_no) & !is.na(i_gene_s_no)) |> 
   filter(!consultant_address %in% c(NA, ""))
 
 # Joining (demo) --------------------------------------------------------------------
@@ -75,7 +75,7 @@ sample_referrer <- sample_info |>
 
 results_joined <- sample_results |> 
   left_join(sample_dna_concs, join_by("labno" == "lab_number")) |> 
-  left_join(sample_referrer, by = "nhsno")
+  left_join(sample_referrer, by = "i_gene_s_no")
 
 results_filtered <- results_joined |> 
   # Use ==
@@ -89,11 +89,11 @@ results_filtered <- results_joined |>
 
 # Export data -----------------------------------------------------------------------
 
-write.csv(sample_results, file = here::here("data/demo_2/sample_results.csv"),
+write.csv(sample_results, file = here::here("data/demo_2/csv_files/sample_results.csv"),
            row.names = FALSE)
 
-write.csv(sample_dna_concs, file = here::here("data/demo_2/sample_dna_concs.csv"),
+write.csv(sample_dna_concs, file = here::here("data/demo_2/csv_files/sample_dna_concs.csv"),
           row.names = FALSE)
 
-write.csv(sample_referrer, file = here::here("data/demo_2/sample_referrer.csv"),
+write.csv(sample_referrer, file = here::here("data/demo_2/csv_files/sample_referrer.csv"),
           row.names = FALSE)
